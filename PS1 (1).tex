@@ -1,0 +1,180 @@
+%------------%
+%  Preamble  %
+%------------%
+
+\documentclass[final,11pt]{article}
+\usepackage[paperwidth=9.0in, top=1.2in, bottom=1.2in, left=1.2in, right=1.2in]{geometry}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{mathpazo}
+\usepackage{threeparttable}
+\usepackage{eurosym}
+\usepackage[colorlinks, linkcolor=blue, anchorcolor=blue, citecolor=blue]{hyperref}
+\usepackage{graphicx}
+\usepackage{float}
+
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\arraycolsep}{10pt}
+\setlength\headheight{0.5cm}
+\setlength\headsep{0.8cm}
+\setlength\footskip{1.0cm}
+\setlength{\parindent}{0em}
+\pagestyle{fancy}
+\chead{\textcolor[rgb]{0.5,0.5,0.5}{\sc Spring 2025: ECON 3120}}
+
+%------------%
+%  Document  %
+%------------%
+
+\begin{document}
+\thispagestyle{empty}
+\begin{spacing}{1.25}
+
+\textbf{Your Name: Robby Kevlishvili\hfill Problem Set 1 Due: Feb. 18, 2025}\\
+
+(1) The Poisson distribution has probability mass function
+\begin{gather}
+    p(y_i|\theta)=\frac{\theta^{y_i}e^{-\theta}}{y_i!},\qquad \theta>0,\qquad y_i=0,1,\ldots
+\end{gather}
+and let $y_1,\ldots,y_n$ be random sample from this distribution.
+\begin{enumerate}
+    \item Show that the gamma distribution $\mathcal{G}(\alpha,\beta)$ is a conjugate prior distribution for the Poisson distribution.
+
+{\color{blue}
+Solution:
+\begin{enumerate}
+    \item The Gamma prior is given by
+    \begin{gather}
+        \pi(\theta|\alpha,\beta)\propto \theta^{\alpha-1}\cdot e^{-\theta/\beta}
+    \end{gather}
+    The likelihood function is given by
+    \begin{gather}
+        f(y|\theta)\propto \theta^{\sum y_i}\cdot e^{-n\theta}
+    \end{gather}
+    Multiplying these two equations gives
+    \begin{gather}
+        \pi(\theta|y) \propto \theta^{\alpha-1+\sum y_i} \cdot e^{-\theta(n/\beta)}
+    \end{gather}
+    We see that 
+    \begin{gather}
+        \theta|y \sim \mathcal{G}(\alpha',\beta') \qquad \text{where}\ \alpha' = \alpha + \sum y_i, \qquad \beta' = n+(1/\beta)  
+    \end{gather}
+\end{enumerate}
+}
+
+  
+    \item Show that $\bar{y}$ is the MLE for $\theta$.
+
+{\color{red}
+Solution:
+\begin{enumerate}
+    \item The likelihood function is given by
+    \begin{gather}
+        f(y|\theta)\propto \theta^{\sum y_i}\cdot e^{-n\theta}
+    \end{gather}
+    Taking the log gives us
+    \begin{gather}
+        log f(y|\theta) = \sum y_i log(\theta) -n\theta-log(\sum y_i)
+    \end{gather}
+    Taking the derivative with respect to $\theta$ gives
+    \begin{gather}
+         log f(y|\theta)' =  \frac{\sum y_i}{\theta} -n
+    \end{gather}
+    Setting this equal to 0 and solving for $\theta$ gives
+    \begin{gather}
+        \theta = \frac{\sum y_i}{n}= \bar{y}\\  
+        Q.E.D
+    \end{gather}
+\end{enumerate}
+
+}
+
+    \item Write the mean of the posterior distribution as a weighted average of the mean of the prior distribution and the MLE.
+
+{\color{blue}
+Solution:
+\begin{enumerate}
+    \item We want to find weights (w and (1-w)) so that
+    \begin{gather}
+        E(\theta|y) = w \cdot E[0] + (1-w) \cdot \bar{y}
+    \end{gather}
+    Substituting answers from parts (1) and (2) gives
+    \begin{gather}
+        \frac {\alpha + \sum y_i}{\beta +n} = w \cdot (\alpha/\beta) + (1-w) \cdot \frac{\sum y_i}{n}
+    \end{gather}
+    Using WolframAlpha to solve for w gives
+    \begin{gather}
+         w = \frac{\beta}{\beta +n}
+    \end{gather}
+    This means the posterior distribution can be expressed as
+    \begin{gather}
+        E(\theta|y) = \frac{\beta}{\beta +n} \cdot E[0] + (1-\frac{\beta}{\beta +n}) \cdot \bar{y}  
+    \end{gather}
+\end{enumerate}
+
+}
+    \item What happens to the weight on the prior mean as $n$ becomes large?
+
+    As n becomes larger, the weight on the prior mean decreases. If n becomes sufficiently large, the weight will tend to 0.
+\end{enumerate}
+
+\newpage
+
+(2) Consider the following two sets of data obtained after tossing a die 100 and 1000 times, respectively:
+\begin{center}
+    \begin{tabular}{ r r r r r r r }
+        \hline
+        $n$ & 1 & 2 & 3 & 4 & 5 & 6 \\
+        \hline
+        100 & 19 & 12 & 17 & 18 & 20 & 14 \\  
+        1000 & 190 & 120 & 170 & 180 & 200 & 140 \\
+        \hline
+    \end{tabular}
+\end{center}
+Suppose you are interested in $\theta_1$, the probability of obtaining a one spot. Assume your prior for all the probabilities is a Dirichlet distribution, where each $\alpha_i=2$. Compute the posterior distribution for $\theta_1$ for each of the sample sizes in the table. Plot the resulting distribution and compare the results. Comment on the effect of having a larger sample.
+
+{\color{blue}
+Solution:
+\begin{enumerate}
+    \item The prior distribution is expressed as
+    \begin{gather}
+        Dirichlet(2,2,2,2,2,2)
+    \end{gather}
+    The posterior distribution for $n=100$ is expressed as
+    \begin{gather}
+        Dirichlet(21,14,19,20,22,16)
+    \end{gather}
+    The posterior distribution for $n=1000$ is expressed as 
+    \begin{gather}
+        Dirichlet(192, 122, 172, 182, 202,142)
+    \end{gather}
+    The marginal distribution can be expressed as $\theta_1 \sim  Beta (\alpha_1, \sum \alpha)$, or specifically
+    \begin{gather}
+          for \; n=100: \theta_1 \sim Beta(21,91)\\ 
+          for\; n = 1000: \theta_1 \sim Beta(192,820)
+    \end{gather}
+    Plotting the graphs:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{beta2191.png}
+    \caption{Beta(21,91)}
+    \label{fig:enter-label}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{beta192820.png}
+    \caption{Beta(192,820)}
+    \label{fig:enter-label}
+\end{figure}
+Comparing these two figures, we clearly see the larger sample size gives a more accurate and robust estimation range. The estimation seems to converge closer to the actual parameter value. This also makes intuitive sense- more data results in more accurate estimations. 
+\end{enumerate}
+}
+
+\end{spacing}
+\end{document}
